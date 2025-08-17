@@ -1,0 +1,31 @@
+FluxCD:
+
+        A GitOps-based Continuous Delivery (CD) tool for Kubernetes.
+
+        Automates syncing of cluster state with manifests stored in Git.
+
+        Supports Helm, Kustomize, and multi-cluster setups.
+
+        Continuously reconciles desired state (Git) with actual cluster state.
+
+Advantages:
+
+        Ensures consistent, declarative deployments across environments.
+
+        Strong ecosystem support with CNCF project backing.
+
+        Modular and extensible — integrates well with Helm charts and Git workflows.
+
+        Automated drift detection and correction.
+
+        Secure by design (pull-based model, no need to expose cluster API).
+
+Usefulness in SDLC:
+
+        Increases reliability and reproducibility of deployments.
+
+        Enables faster delivery cycles with minimal manual intervention.
+
+        Enhances collaboration via Git as the single source of truth.
+
+        Simplifies operations in complex, multi-cluster environments.

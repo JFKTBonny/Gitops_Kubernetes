@@ -1,0 +1,16 @@
+Argo CD is a declarative tool for continuous delivery specifically designed for Kubernetes...
+       It functions as a standalone solution or can be integrated into your existing CI/CD pipeline 
+       to efficiently deploy necessary resources across your Kubernetes clusters... 
+
+Integrating GitOps and Kubernetes using Argo CD provides a streamlined approach for managing
+cloud-native applications and jobs on Kubernetes...
+
+
+Advantages: - Ensures consistent, version-controlled deployments. 
+            - Reduces manual operations by auto-applying changes from Git. 
+            - Easy rollback with Git history. - Improves security by using Git as the single source of truth. 
+            - Provides real-time monitoring and quick feedback loops.
+
+Usefulness in SDLC: - Guarantees reliable and reproducible deployments. 
+                    - Improves collaboration between dev & ops through Git workflows. 
+                    - Enables faster delivery while reducing errors in production.
