@@ -1,0 +1,101 @@
+###🔹 Basic Commands:
+
+Install a chart:
+
+        helm install <release-name> <chart>
+
+
+Example:
+
+        helm install myapp bitnami/nginx
+
+
+Upgrade (install if not exists):
+
+        helm upgrade --install <release-name> <chart>
+
+
+Uninstall a release:
+
+        helm uninstall <release-name>
+
+
+List installed releases:
+
+        helm list
+
+### 🔹 Exploring / Debugging:
+
+Search for charts in Artifact Hub:
+
+        helm search hub <keyword>
+
+
+Search repositories you’ve added:
+
+        helm search repo <keyword>
+
+
+Inspect chart contents:
+
+        helm show chart <chart>
+        helm show values <chart>
+
+
+Dry-run (render templates without installing):
+
+        helm install <release-name> <chart> --dry-run --debug
+
+
+Template (render YAML only):
+
+        helm template <release-name> <chart>
+
+### 🔹 Managing Repos:
+
+Add a repo:
+
+        helm repo add <name> <url>
+
+
+Example:
+
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+
+
+Update repos:
+
+        helm repo update
+
+
+List repos:
+
+        helm repo list
+
+### 🔹 Customizing Deployments:
+
+Install/upgrade with custom values:
+
+        helm install myapp ./mychart -f values.yaml
+        helm upgrade myapp ./mychart -f custom-values.yaml
+
+
+Set values via CLI:
+
+        helm install myapp ./mychart --set replicaCount=3
+
+
+Diff between versions (with plugin):
+
+        helm diff upgrade myapp ./mychart
+
+
+### ⚡ Quick mental model:
+
+        helm install → deploy a chart.
+
+        helm upgrade --install → recommended safe deploy/update.
+
+        helm template → preview manifests without applying.
+
+        helm repo → manage chart repositories.

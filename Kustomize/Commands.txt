@@ -1,0 +1,76 @@
+🔹 Basic Commands:
+
+Build manifests from a kustomization
+
+        kustomize build <path>
+
+
+Example:
+
+        kustomize build overlays/development
+
+
+Apply manifests directly to a cluster (via kubectl)
+
+        kubectl apply -k <path>
+
+
+Example:
+
+        kubectl apply -k overlays/staging
+
+
+Delete resources defined in a kustomization
+
+        kubectl delete -k <path>
+
+###🔹 Exploring / Debugging:
+
+View final YAML without applying:
+
+        kustomize build overlays/development | less
+
+
+Validate YAML with kubectl:
+
+        kustomize build overlays/development | kubectl apply --dry-run=client -f -
+
+
+Compare environments (e.g., dev vs staging):
+
+        diff <(kustomize build overlays/development) <(kustomize build overlays/staging)
+
+### 🔹 Editing / Generating:
+
+Set a new image for deployments:
+
+        kustomize edit set image myapp=myapp:1.2.3
+
+
+Set a namespace for all resources:
+
+        kustomize edit set namespace dev-namespace
+
+
+Add a new resource:
+
+        kustomize edit add resource ../base
+
+
+Add a common label to all resources:
+
+        kustomize edit add label env=development
+
+
+Add a common annotation:
+
+        kustomize edit add annotation owner=bonny
+
+
+### ⚡ Quick mental model:
+
+        Use kustomize build when you want to see or export YAML.
+
+        Use kubectl apply -k when you want to deploy to the cluster.
+
+        Use kustomize edit ... to manipulate your kustomization.yaml without manually editing.
