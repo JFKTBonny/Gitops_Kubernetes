@@ -1,0 +1,135 @@
+============================================================
+Argo CD on Minikube with Ingress + HTTPS (443) - Setup Guide
+============================================================
+
+1. Start Minikube with Ingress enabled
+--------------------------------------
+        $ minikube start --memory=4096 --cpus=2
+        $ minikube addons enable ingress
+
+        Verify ingress controller:
+        $ kubectl get pods -n kube-system
+        Look for ingress-nginx-controller
+
+---
+
+2. Install Argo CD
+------------------
+        $ kubectl create namespace argocd
+        $ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+        Check pods:
+        $ kubectl get pods -n argocd
+
+---
+
+3. Get Argo CD initial admin password
+-------------------------------------
+        $ kubectl get secret argocd-initial-admin-secret -n argocd \
+        -o jsonpath="{.data.password}" | base64 -d
+
+---
+
+4. Create TLS Secret for Ingress
+--------------------------------
+        Generate self-signed certificate:
+        $ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -out argocd.crt -keyout argocd.key \
+        -subj "/CN=argo.local.example.com/O=ArgoCD"
+
+        Create TLS secret in Kubernetes:
+        $ kubectl create secret tls argocd-tls \
+        --namespace argocd \
+        --key argocd.key \
+        --cert argocd.crt
+
+---
+
+5. Create Ingress resource
+--------------------------
+        Save as argocd-ingress.yaml:
+
+
+
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+        name: argocd-ingress
+        namespace: argocd
+        annotations:
+            nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+            nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        spec:
+        ingressClassName: nginx
+        tls:
+        - hosts:
+            - argo.local.example.com
+            secretName: argocd-tls
+        rules:
+        - host: argo.local.example.com
+            http:
+            paths:
+            - path: /
+                pathType: Prefix
+                backend:
+                service:
+                    name: argocd-server
+                    port:
+                    number: 443
+
+        Apply the ingress:
+        $ kubectl apply -f argocd-ingress.yaml -n argocd
+
+---
+
+6. Update /etc/hosts
+--------------------
+        Get Minikube IP:
+        $ minikube ip
+
+        Add entry to /etc/hosts:
+        <minikube-ip>   argo.local.example.com
+
+        Example:
+        192.168.49.2  argo.local.example.com
+
+---
+
+7. Access Argo CD UI
+-------------------
+        Open in browser:
+        https://argo.local.example.com
+
+        Accept self-signed certificate warning.
+
+        Login:
+        Username: admin
+        Password: <from step 3>
+
+---
+
+8. CLI Login
+------------
+        $ argocd login argo.local.example.com \
+        --username admin \
+        --password <password> \
+        --grpc-web
+
+---
+
+9. Troubleshooting Notes
+------------------------
+        - If Ingress ADDRESS is empty:
+        $ kubectl get ingress -n argocd
+        Make sure ingressClassName matches "nginx".
+
+        - If browser shows redirect loops:
+        Ensure annotation:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+
+        - Do not use ClusterIP (10.x.x.x) in /etc/hosts — it won't work outside Minikube.
+
+---
+
+
+============================================================

@@ -1,0 +1,16 @@
+we need a k8s cluster up and running before starting the ArgoCD installation within the chosen cluster...
+Commands:
+            kubectl create namespace argocd
+            kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+Expose the ArgoCD API Server Options:
+            1- Port-forward:  kubectl port-forward svc/argocd-server -n argocd 8080:443 then go to ""https://localhost:8080"""
+            2- LoadBalancer/Ingress for Cloud Provider: kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+            
+
+Get the initial Admin Password: kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
+
+
+
+
+                         
